@@ -15,6 +15,7 @@ SPIDER_MODULES = ['noticia.spiders']
 NEWSPIDER_MODULE = 'noticia.spiders'
 ITEM_PIPELINES = {'noticia.pipelines.NoticiaPipeline': 300}
 
+LOG_LEVEL='ERROR'
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'noticia (+http://www.yourdomain.com)'
 
