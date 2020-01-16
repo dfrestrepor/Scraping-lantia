@@ -19,20 +19,26 @@ class web_spider(CrawlSpider):
 
 
 	def parse(self, response):
-		noticia1 = response.xpath('//h3/a')
-		noticia2 = response.xpath('//article/a')
-		noticia3 = response.xpath('//h2/a')
+		noticia1 = response.xpath('//div/article/div/h3/a')
+		noticia2 = response.xpath('//*[@id="scroll-anchor"]/main/section/div/div/div/article/a')
+		noticia3 = response.xpath('/html/body/div/div/div/div/div/div/div/article/h2/a')
 		noticia= noticia1+noticia2+noticia3
-		print(noticia)
+		#print(noticia)
 		for value in noticia:
-			url = value.xpath('@href').extract()
-			article = Article(url[0])
-			article.download()
-			article.parse()
-			ws_item = NoticiaItem()
-			ws_item['link'] = article.url
-			ws_item['pubdate'] = article.publish_date
-			yield ws_item
+			try:
+				url = value.xpath('@href').extract()
+				article = Article(url[0])
+				article.download()
+				article.parse()
+				ws_item = NoticiaItem()
+				ws_item['titulo']=article.title
+				ws_item['descrip']=article.text
+				ws_item['link'] = article.url
+				ws_item['pubdate'] = article.publish_date
+				yield ws_item
+			except:
+				pass
+
 
 
 
