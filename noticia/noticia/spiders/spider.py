@@ -8,12 +8,11 @@ from scrapy.linkextractors import LinkExtractor
 from scrapy.exceptions import CloseSpider
 from noticia.items import NoticiaItem
 from newspaper import Article
-import csv
+
 
 
 class web_spider(CrawlSpider):
 	name = 'noticias'
-	item_count = 0
 	allowed_domain = ['www.sciencenews.org', 'https://www.screenskills.com/', 'http://designpackagingnews.com']
 	start_urls = ['https://www.sciencenews.org/topics', 'https://www.screenskills.com/', 'http://designpackagingnews.com/en/']
 
@@ -31,12 +30,16 @@ class web_spider(CrawlSpider):
 				article.download()
 				article.parse()
 				ws_item = NoticiaItem()
-				ws_item['titulo']=article.title
-				ws_item['descrip']=article.text
 				ws_item['link'] = article.url
+				ws_item['titulo']=article.title
+				ws_item['autor']=article.authors
 				ws_item['pubdate'] = article.publish_date
+				ws_item['descrip']=article.text
+				ws_item['imagen']=article.top_image
+				ws_item['video']=article.movies
 				yield ws_item
 			except:
+				print('La noticia {} no puedo ser leida'.format(url))
 				pass
 
 

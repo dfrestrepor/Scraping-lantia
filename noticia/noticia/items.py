@@ -10,8 +10,13 @@ import scrapy
 
 class NoticiaItem(scrapy.Item):
     #define the fields for your item here like:
-    titulo = scrapy.Field()
-    descrip = scrapy.Field()
     link = scrapy.Field()
+    titulo = scrapy.Field()
+    autor = scrapy.Field()
     pubdate = scrapy.Field()
+    descrip = scrapy.Field()
+    imagen = scrapy.Field()
+    video = scrapy.Field()
+
+
 

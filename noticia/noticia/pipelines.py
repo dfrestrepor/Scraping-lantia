@@ -27,7 +27,7 @@ class NoticiaPipeline(object):
         file = open('%s_items.csv' % spider.name, 'w+b')
         self.files[spider] = file
         self.exporter = CsvItemExporter(file)
-        self.exporter.fields_to_export = ['link', 'titulo', 'descrip', 'pubdate']
+        self.exporter.fields_to_export = ['link', 'titulo', 'autor',  'pubdate', 'descrip', 'imagen', 'video']
         self.exporter.start_exporting()
 
     def spider_closed(self, spider):
