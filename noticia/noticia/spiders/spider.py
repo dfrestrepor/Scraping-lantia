@@ -8,13 +8,21 @@ from scrapy.linkextractors import LinkExtractor
 from scrapy.exceptions import CloseSpider
 from noticia.items import NoticiaItem
 from newspaper import Article
+from datetime import date
+from datetime import datetime
 
 
 
 class web_spider(CrawlSpider):
 	name = 'noticias'
-	allowed_domain = ['www.sciencenews.org', 'https://www.screenskills.com/', 'http://designpackagingnews.com']
-	start_urls = ['https://www.sciencenews.org/topics', 'https://www.screenskills.com/', 'http://designpackagingnews.com/en/']
+	allowed_domain = ['www.sciencenews.org']#, 'https://www.screenskills.com/', 'http://designpackagingnews.com']
+	start_urls = ['https://www.sciencenews.org/topics']#, 'https://www.screenskills.com/', 'http://designpackagingnews.com/en/']
+
+
+
+	def __init__(self, history=False, *args, **kwargs):
+		super(web_spider, self).__init__(*args, **kwargs)
+		self.history = history
 
 
 	def parse(self, response):
@@ -30,14 +38,27 @@ class web_spider(CrawlSpider):
 				article.download()
 				article.parse()
 				ws_item = NoticiaItem()
-				ws_item['link'] = article.url
-				ws_item['titulo']=article.title
-				ws_item['autor']=article.authors
-				ws_item['pubdate'] = article.publish_date
-				ws_item['descrip']=article.text
-				ws_item['imagen']=article.top_image
-				ws_item['video']=article.movies
-				yield ws_item
+				if self.history:
+					ws_item['link'] = article.url
+					ws_item['titulo']=article.title
+					ws_item['autor']=article.authors
+					ws_item['pubdate'] = article.publish_date
+					ws_item['descrip']=article.text
+					ws_item['imagen']=article.top_image
+					ws_item['video']=article.movies
+					yield ws_item
+				else:
+					hoy = date.today()
+					fecha = article.publish_date
+					if (fecha.year, fecha.month, fecha.day) == (hoy.year, hoy.month, hoy.day):
+						ws_item['link'] = article.url
+						ws_item['titulo'] = article.title
+						ws_item['autor'] = article.authors
+						ws_item['pubdate'] = article.publish_date
+						ws_item['descrip'] = article.text
+						ws_item['imagen'] = article.top_image
+						ws_item['video'] = article.movies
+						yield ws_item
 			except:
 				print('La noticia {} no puedo ser leida'.format(url))
 				pass
