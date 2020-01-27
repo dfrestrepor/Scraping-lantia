@@ -10,13 +10,14 @@ from noticia.items import NoticiaItem
 from newspaper import Article
 from datetime import date
 from datetime import datetime
+from datetime import timedelta
 
 
 
 class web_spider(CrawlSpider):
 	name = 'noticias'
-	allowed_domain = ['www.sciencenews.org']#, 'https://www.screenskills.com/', 'http://designpackagingnews.com']
-	start_urls = ['https://www.sciencenews.org/topics']#, 'https://www.screenskills.com/', 'http://designpackagingnews.com/en/']
+	allowed_domain = #aqui va el ambiente de dominios
+	start_urls = #aqui va las paginas iniciales
 
 
 
@@ -26,11 +27,13 @@ class web_spider(CrawlSpider):
 
 
 	def parse(self, response):
-		noticia1 = response.xpath('//div/article/div/h3/a')
-		noticia2 = response.xpath('//*[@id="scroll-anchor"]/main/section/div/div/div/article/a')
-		noticia3 = response.xpath('/html/body/div/div/div/div/div/div/div/article/h2/a')
-		noticia= noticia1+noticia2+noticia3
+		caminos = #aqui va el ambiente de los caminos
+		for camino in caminos:
+			noticia1 = response.xpath(camino)
+			noticia += noticia1
 		#print(noticia)
+		hoy = date.today()
+		ayer = hoy - timedelta(days=1)
 		for value in noticia:
 			try:
 				url = value.xpath('@href').extract()
@@ -38,6 +41,7 @@ class web_spider(CrawlSpider):
 				article.download()
 				article.parse()
 				ws_item = NoticiaItem()
+				fecha = article.publish_date
 				if self.history:
 					ws_item['link'] = article.url
 					ws_item['titulo']=article.title
@@ -47,18 +51,18 @@ class web_spider(CrawlSpider):
 					ws_item['imagen']=article.top_image
 					ws_item['video']=article.movies
 					yield ws_item
+				elif(fecha.year, fecha.month, fecha.day) == (hoy.year, hoy.month, hoy.day) or \
+						(fecha.year, fecha.month, fecha.day) == (ayer.year, ayer.month, ayer.day):
+					ws_item['link'] = article.url
+					ws_item['titulo'] = article.title
+					ws_item['autor'] = article.authors
+					ws_item['pubdate'] = article.publish_date
+					ws_item['descrip'] = article.text
+					ws_item['imagen'] = article.top_image
+					ws_item['video'] = article.movies
+					yield ws_item
 				else:
-					hoy = date.today()
-					fecha = article.publish_date
-					if (fecha.year, fecha.month, fecha.day) == (hoy.year, hoy.month, hoy.day):
-						ws_item['link'] = article.url
-						ws_item['titulo'] = article.title
-						ws_item['autor'] = article.authors
-						ws_item['pubdate'] = article.publish_date
-						ws_item['descrip'] = article.text
-						ws_item['imagen'] = article.top_image
-						ws_item['video'] = article.movies
-						yield ws_item
+					pass
 			except:
 				print('La noticia {} no puedo ser leida'.format(url))
 				pass
