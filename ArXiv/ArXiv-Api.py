@@ -3,7 +3,8 @@ from bs4 import BeautifulSoup
 import json
 import urllib.request as libreq
 import re
-from codes import codigos
+from categorias import lista
+import funciones
 
 
 data_arxiv = {}
@@ -13,8 +14,9 @@ autores = []
 abstract = []
 links = []
 fechas = []
+lis= lista()
 
-for codigo in codigos:
+for codigo in lis:
     link = 'http://export.arxiv.org/api/query?search_query=all:'+codigo
     with libreq.urlopen(link) as url:
         r = url.read().decode("utf-8")
