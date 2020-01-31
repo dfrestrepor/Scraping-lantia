@@ -16,6 +16,9 @@ from noticia.dominios_fc import lista_dominios_fc
 from noticia.urls_fc import lista_urls_fc
 
 
+
+
+
 class web_spider(CrawlSpider):
 	name = 'noticias'
 	allowed_domain = lista_dominios_fc()
