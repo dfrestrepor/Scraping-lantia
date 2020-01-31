@@ -3,7 +3,7 @@
 # Define your item pipelines here
 #
 # Don't forget to add your pipeline to the ITEM_PIPELINES setting
-# See: http://doc.scrapy.org/en/latest/topics/item-pipeline.html
+# See: https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 
 import scrapy
 from scrapy import signals
@@ -13,7 +13,7 @@ from scrapy import Request
 import csv
 import json
 
-class Web_scraping_Pipeline(object):
+class NoticiaPipeline(object):
     def __init__(self):
         self.files = {}
 
@@ -28,7 +28,7 @@ class Web_scraping_Pipeline(object):
         file = open('%s_items.csv' % spider.name, 'w+b')
         self.files[spider] = file
         self.exporter = CsvItemExporter(file)
-        self.exporter.fields_to_export = ['titulo', 'url', 'autor', 'contenido']
+        self.exporter.fields_to_export = ['link', 'titulo', 'autor',  'pubdate', 'descrip', 'imagen', 'video']
         self.exporter.start_exporting()
 
     def spider_closed(self, spider):
@@ -39,8 +39,3 @@ class Web_scraping_Pipeline(object):
     def process_item(self, item, spider):
         self.exporter.export_item(item)
         return item
-
-
-
-
-

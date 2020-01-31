@@ -16,11 +16,11 @@ from noticia.urls_nf import lista_urls_nf
 class web_spider(CrawlSpider):
 	name = 'noticias'
 	allowed_domain = lista_dominios_nf()
-	start_urls = lista_urls_nf()[:2]
+	start_urls = lista_urls_nf()[:3]
 
 
 	def parse(self, response):
-		lista_caminos = lista_caminos_nf()[:2]
+		lista_caminos = lista_caminos_nf()[:3]
 		noticia=[]
 		for camino in lista_caminos:
 			noticia1 = response.xpath(camino)
